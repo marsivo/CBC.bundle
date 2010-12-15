@@ -25,7 +25,7 @@
 		<string>M4V</string>
 	</array>
 	<key>PlexPluginConsoleLogging</key>
-	<string>0</string>
+	<string>1</string>
 	<key>PlexPluginMode</key>
 	<string>AlwaysOn</string>
 	<key>PlexPluginDevMode</key>
