@@ -16,28 +16,28 @@
 	<string>hook</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>PlexAudioCodec</key>
+	<array>
+		<string>AAC</string>
+	</array>
 	<key>PlexClientPlatforms</key>
-	<string>MacOSX,iOS</string>
+	<string>MacOSX,iOS,Android</string>
 	<key>PlexFrameworkVersion</key>
 	<string>2</string>
-	<key>PlexPluginMode</key>
-	<string>AlwaysOn</string>
 	<key>PlexMediaContainer</key>
 	<array>
 		<string>Flash</string>
 		<string>M4V</string>
 	</array>
-	<key>PlexAudioCodec</key>
-	<array>
-		<string>AAC</string>
-	</array>
-	<key>PlexVideoCodec</key>
-	<array>
-		<string>H.264</string>
-	</array>
 	<key>PlexPluginConsoleLogging</key>
 	<string>0</string>
 	<key>PlexPluginDevMode</key>
 	<string>0</string>
+	<key>PlexPluginMode</key>
+	<string>AlwaysOn</string>
+	<key>PlexVideoCodec</key>
+	<array>
+		<string>H.264</string>
+	</array>
 </dict>
 </plist>
