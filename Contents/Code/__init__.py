@@ -25,21 +25,23 @@ CATEGORY_LIST = {'News'		:	'1221258968',
 				'NS'		:	'1317909223',
 				'Ottawa'	:	'1317910092',
 				'PEI'		:	'1317910853',
-				'Saskatchewan':	'1317911675',
+				'Saskatchewan'	:	'1317911675',
 				'Toronto'	:	'1317912017',
 				'Windsor'	:	'1317913355'
 				}
 
-SHOWEXCEPTIONS = {'The Rick Mercer Report'	:	'Rick Mercer Report',
-				'The Ron James Show'		:	'Ron James Show',
-				'Hockey Night in Canada'	:	'HNIC',
-				'Q on bold'					:	'Q'
+SHOWEXCEPTIONS = {'The Rick Mercer Report'				:	'Rick Mercer Report',
+				'The Ron James Show'			:	'Ron James Show',
+				'Hockey Night in Canada'		:	'HNIC',
+				'Q on bold'				:	'Q',
+				'George Stroumboulopoulos Tonight'	:	'George Tonight'
 				}
 
-SHOWEXCEPTIONS_REV = {'Rick Mercer Report'	:	'The Rick Mercer Report',
-					'Ron James Show'		:	'The Ron James Show',
-					'HNIC'					:	'Hockey Night in Canada',
-					'Q'						:	'Q on bold'
+SHOWEXCEPTIONS_REV = {'Rick Mercer Report'			:	'The Rick Mercer Report',
+					'Ron James Show'	:	'The Ron James Show',
+					'HNIC'			:	'Hockey Night in Canada',
+					'Q'			:	'Q on bold',
+					'George Tonight'	:	'George Stroumboulopoulos Tonight'
 					}
 
 SHOWSLIST = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getCategoryList?PID=_DyE_l_gC9yXF9BvDQ4XNfcCVLS4PQij&field=ID&field=title&field=parentID&field=description&customField=MaxClips&customField=ClipType&query=ParentIDs|1221254309'
