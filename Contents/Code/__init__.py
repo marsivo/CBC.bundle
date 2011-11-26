@@ -105,7 +105,7 @@ def ShowsMenu(sender, level, title2, showName="",category='Shows', currentPage=0
 	dir = MediaContainer(title2=title2)
 	if level == 1:
 		cbcJson = JSON.ObjectFromURL(SHOWSLIST, cacheTime=600)['items']
-		Log(cbcJson)
+		#Log(cbcJson)
 		level=int(level)
 		for show in cbcJson:
 			title = show['title']
