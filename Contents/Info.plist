@@ -26,6 +26,7 @@
 	<array>
 		<string>Flash</string>
 		<string>M4V</string>
+		<string>MP4</string>
 	</array>
 	<key>PlexClientCapabilities</key>
 	<dict>
