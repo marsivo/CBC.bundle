@@ -82,7 +82,7 @@ def NewsMenu(sender):
 	url = 'http://www.cbc.ca/thenational/watch/'
 	dir = MediaContainer(title2="News")
 	dir.Append(WebVideoItem(url,L('TheNationalTitle'), subtitle=L('TheNationalSubtitle'), summary=L('TheNationalSummary'), duration="3600000", thumb=R('the_national_program.jpg')))
-	dir.Append(Function(DirectoryItem(GetRSS,L('OnDemandTitle'),subtitle="",summary=L('OnDemandSummary'),thumb=R('bg-yourNational.jpg'),art=R(ART),),show="NoD", title2=L('OnDemandTitle')))
+#	dir.Append(Function(DirectoryItem(GetRSS,L('OnDemandTitle'),subtitle="",summary=L('OnDemandSummary'),thumb=R('bg-yourNational.jpg'),art=R(ART),),show="NoD", title2=L('OnDemandTitle')))
 	dir.Append(Function(DirectoryItem(GetRSS,L('AtIssueTitle'),subtitle="",summary=L('AtIssueSummary'),thumb=R('atissue.png'),art=R(ART),),show="AtIssue", title2=L('AtIssueTitle')))
 	dir.Append(Function(DirectoryItem(GetRSS,L('RexMurphyTitle'),subtitle="",summary=L('RexMurphySummary'),thumb=R('rexmurphy.jpg'),art=R(ART),),show="RexMurphy", title2=L('RexMurphyTitle')))
 	dir.Append(Function(DirectoryItem(GetClips,L('NewsRecent'),subtitle="",summary=L('NewsRecentSummary'),thumb=R(ICON),art=R(ART),),category="News", arrange="airdate", title2=L('Latest')))
