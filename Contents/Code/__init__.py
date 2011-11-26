@@ -50,6 +50,8 @@ CLIPSURL = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getReleas
 SHOWSURL = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getReleaseList?PID=_DyE_l_gC9yXF9BvDQ4XNfcCVLS4PQij&field=title&field=PID&field=ID&field=description&field=categoryIDs&field=thumbnailURL&field=URL&field=added&field=airdate&field=expirationDate&field=length&field=Keywords&query=%s&sortField=airdate&sortDescending=true&startIndex=1&endIndex=%s'
 WATCHURL = 'http://www.cbc.ca/video/#/%s/ID='
 
+SMIL_URL = 'http://link.theplatform.com/s/h9dtGB/zRoOKQ_cN9OQOikWISihO5bmV8zWB3Xs?isPLS=false&airdate=1301356800000&site=cbcentca&zone=little_mosque_on_the_prairie&shortClip=false&show=little_mosque_on_the_prairie&liveondemand=ondemand&type=full_program&season=5&format=SMIL&Tracking=true&Embedded=true'
+
 ####################################################################################################
 
 def Start():
@@ -103,10 +105,10 @@ def ShowsMenu(sender, level, title2, showName="",category='Shows', currentPage=0
 	dir = MediaContainer(title2=title2)
 	if level == 1:
 		cbcJson = JSON.ObjectFromURL(SHOWSLIST, cacheTime=600)['items']
+		Log(cbcJson)
 		level=int(level)
 		for show in cbcJson:
 			title = show['title']
-			summary = show['description']
 			clipType = show['customData'][1]['value']
 			if show['customData'][0]['value'] != "":
 				maxClips = show['customData'][0]['value']
@@ -118,7 +120,7 @@ def ShowsMenu(sender, level, title2, showName="",category='Shows', currentPage=0
 				continue
 			else:
 				showName = String.Quote(show['title'], usePlus=False)
-			dir.Append(Function(DirectoryItem(ShowsMenu,title=title,summary=summary,thumb=R(ICON),art=R(ART),), level=level+1, title2=title, showName=showName,clipType=clipType, maxClips=maxClips))
+			dir.Append(Function(DirectoryItem(ShowsMenu,title=title,thumb=R(ICON),art=R(ART),), level=level+1, title2=title, showName=showName,clipType=clipType, maxClips=maxClips))
 	elif level == 2:
 		epUrl = GetEpisodesUrl(showName, clipType, maxClips)
 		cbcData = JSON.ObjectFromURL(epUrl, cacheTime=600)
@@ -153,7 +155,7 @@ def ShowsMenu(sender, level, title2, showName="",category='Shows', currentPage=0
 					subtitle = 'Streams live on ' + airdate
 					summary = summary + '\n\nStreams live on ' + airdate
 			thumb = show['thumbnailURL']
-			dir.Append(WebVideoItem(url, title, summary=summary, thumb=thumb, duration=length, subtitle=subtitle))
+			dir.Append(VideoItem(Route(PlayVideo, url=url), title=title, summary=summary, duration=length, subtitle=subtitle, thumb=thumb))
 		if currentPage < pages:
 			if String.Unquote(showName, usePlus=False) in SHOWEXCEPTIONS:
 				showName = String.Quote(SHOWEXCEPTIONS[String.Unquote(showName, usePlus=False)], usePlus=False)
@@ -226,6 +228,12 @@ def GetEpisodesUrl(showName, clipType, maxClips='500'):
 			query = query + '&query=ContentCustomText|ClipType|' + String.Quote(clipType, usePlus=False)
 		url = SHOWSURL % (query, maxClips)
 	return url
+
+####################################################################################################
+
+@route('/video/cbc/v/p')
+def PlayVideo(url):
+    return Redirect(WebVideoItem(url))
 
 ####################################################################################################
 
