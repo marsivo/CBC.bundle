@@ -1,9 +1,13 @@
-SEARCH_URL =        'http://search.cbc.ca/search?q=%s&num=10&client=video-search&proxystylesheet=video-search&output=xml_no_dtd&site=2011-Video&getfields=*&proxyreload=1&ie=utf8&oe=utf8&requiredfields=audioVideo:Video&filter=p'
+BASE_URL    =   'http://www.cbc.ca'
+SEARCH_URL  =   'http://search.cbc.ca/search?q=%s&num=10&client=video-search&proxystylesheet=video-search&output=xml_no_dtd&site=2011-Video&getfields=*&proxyreload=1&ie=utf8&oe=utf8&requiredfields=audioVideo:Video&filter=p'
 
 def Search(query):
-    data = HTML.ELementFromURL(SEARCH_URL % query)
+    oc = ObjectContainer()
+    data = HTML.ElementFromURL(SEARCH_URL % query)
     for clip in data.xpath('//div[@class="clips"]//div[contains(@class, "clip col")]'):
-	clip_url = BASE_URL + clip.xpath('.//a')[0].get('href')
+        clip_url = clip.xpath('.//a')[0].get('href')
+        if not clip_url.startswith(BASE_URL):
+            clip_url = BASE_URL + clip_url
 	title = clip.xpath('.//img')[0].get('alt')
 	thumb = clip.xpath('.//img')[0].get('src')
 	try:

@@ -34,7 +34,8 @@ def VideoMainMenu():
     oc.add(DirectoryObject(key=Callback(ShowCategories), title='Shows'))
     for category in CATEGORIES:
 	oc.add(DirectoryObject(key=Callback(NewsCategories, category=category), title=category))
-    
+    oc.add(SearchDirectoryObject(identifier="com.plexapp.plugins.cbcnewsnetwork", title="Search", summary="Search CBC videos", prompt="Search for...",
+        thumb=R(ICON), art=R(ART)))
     return oc
 
 ####################################################################################################

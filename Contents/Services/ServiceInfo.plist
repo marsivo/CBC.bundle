@@ -7,7 +7,7 @@
 		<key>CBC</key>
 		<dict>
 			<key>Identifier</key>
-			<string>com.plexapp.plugins.cbc</string>
+			<string>com.plexapp.plugins.cbcnewsnetwork</string>
 		</dict>
 	</dict>
 </dict>
