@@ -1,0 +1,29 @@
+SEARCH_URL =        'http://search.cbc.ca/search?q=%s&num=10&client=video-search&proxystylesheet=video-search&output=xml_no_dtd&site=2011-Video&getfields=*&proxyreload=1&ie=utf8&oe=utf8&requiredfields=audioVideo:Video&filter=p'
+
+def Search(query):
+    data = HTML.ELementFromURL(SEARCH_URL % query)
+    for clip in data.xpath('//div[@class="clips"]//div[contains(@class, "clip col")]'):
+	clip_url = BASE_URL + clip.xpath('.//a')[0].get('href')
+	title = clip.xpath('.//img')[0].get('alt')
+	thumb = clip.xpath('.//img')[0].get('src')
+	try:
+	    date = Datetime.ParseDate(clip.xpath('.//span[@class="date"]')[0].text).date()
+	except:
+	    date=None
+	try:
+	    runtime = clip.xpath('.//span[@class="length"]')[0].text.split(':')
+	    if len(runtime) == 3:
+		duration = ((int(runtime[0])*60 + int(runtime[1]))*60 + int(runtime[2]))*1000
+	    elif len(runtime) == 2:
+	        duration = (int(runtime.split(':')[0])*60 + int(runtime.split(':')[1]))*1000
+	    else:
+	        duration = int(runtime[0])*1000
+	except:
+	    duration = None
+	try:
+	    summary = clip.xpath('.//span[@class="desc"]')[0].text
+	except:
+	    summary = ''
+	oc.add(VideoClipObject(url=clip_url, title=title, summary=summary, duration=duration, originally_available_at=date,
+	    thumb=Resource.ContentsOfURLWithFallback(url=thumb, fallback='icon-default.png')))
+    return oc
