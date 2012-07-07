@@ -10,7 +10,6 @@ NAME = 'CBC'
 ART  = 'art-default.jpg'
 ICON = 'icon-default.png'
 
-SHOWS = '2248506087'
 MORE_SHOWS = '1329813962'
 
 #NEWS_LIST = {'News'		:	'1221258968',
@@ -47,14 +46,10 @@ MORE_SHOWS = '1329813962'
 
 SHOWS_LIST = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getCategoryList?PID=_DyE_l_gC9yXF9BvDQ4XNfcCVLS4PQij&field=ID&field=title&field=parentID&field=description&customField=MaxClips&customField=ClipType&query=ParentIDs|%s'
 VIDEOS_LIST = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getReleaseList?PID=_DyE_l_gC9yXF9BvDQ4XNfcCVLS4PQij&query=CategoryIDs|%s&sortDescending=true&endIndex=500'
-#LOCALLIST = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getCategoryList?PID=_DyE_l_gC9yXF9BvDQ4XNfcCVLS4PQij&field=ID&field=title&field=parentID&field=description&customField=MaxClips&customField=ClipType&query=ParentIDs|1244502941'
-#SHOWSURL = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getReleaseList?PID=_DyE_l_gC9yXF9BvDQ4XNfcCVLS4PQij&field=title&field=PID&field=ID&field=description&field=categoryIDs&field=thumbnailURL&field=URL&field=added&field=airdate&field=expirationDate&field=length&field=Keywords&query=%s&sortField=airdate&sortDescending=true&startIndex=1&endIndex=%s'
 BASE_URL = 'http://www.cbc.ca'
 PLAYER_URL = BASE_URL + '/player/%s/' 
 
 CATEGORIES = ['News', 'Sports', 'Digital Archives']
-
-#SMIL_URL = 'http://link.theplatform.com/s/h9dtGB/zRoOKQ_cN9OQOikWISihO5bmV8zWB3Xs?isPLS=false&airdate=1301356800000&site=cbcentca&zone=little_mosque_on_the_prairie&shortClip=false&show=little_mosque_on_the_prairie&liveondemand=ondemand&type=full_program&season=5&format=SMIL&Tracking=true&Embedded=true'
 
 ####################################################################################################
 def Start():
@@ -68,7 +63,7 @@ def Start():
 def VideoMainMenu():
     oc = ObjectContainer()
     
-    oc.add(DirectoryObject(key=Callback(ShowCategories), title=L('SHOWSMENU')))
+    oc.add(DirectoryObject(key=Callback(ShowCategories), title='Shows'))
     for category in CATEGORIES:
 	oc.add(DirectoryObject(key=Callback(NewsCategories, category=category), title=category))
     
@@ -76,7 +71,7 @@ def VideoMainMenu():
 
 ####################################################################################################
 def ShowCategories():
-    oc = ObjectContainer(title2=L('SHOWSMENU'))
+    oc = ObjectContainer(title2='Shows')
     data = HTML.ElementFromURL(PLAYER_URL % 'Shows')
     categories = data.xpath('//div[@id="catnav"]//a[@class="haschildren"]')
     for category in categories:
@@ -102,9 +97,7 @@ def ShowsMenu(id, title1=None, title2=None):
     
     for item in data['items']:
 	title = item['title']
-	Log(title)
 	id = item['ID']
-	Log(id)
 	oc.add(DirectoryObject(key=Callback(ShowsMenu, id=id, title1=title2, title2=title), title=title))
 	
     oc.objects.sort(key = lambda obj: obj.title)
@@ -120,6 +113,8 @@ def NewsCategories(category):
     for item in data.xpath('//div[@id="catnav"]//a'):
 	url = item.get('href')
 	name = item.text
+	if name == 'Local News':
+	    url = url.replace('Local+News', 'Canada')
 	oc.add(DirectoryObject(key=Callback(NewsSortMenu, title1=category, title2=name, url=url), title=name))
     
     if len(oc) == 0:
@@ -154,6 +149,8 @@ def NewsMenu(title1, title2, url, sort_type=None, page=1, categories=[]):
 		pass
     else:
 	pass
+    if title2 == 'Local News':
+	return oc
     
     for clip in data.xpath('//div[@class="clips"]//div[contains(@class, "clip col")]'):
 	clip_url = BASE_URL + clip.xpath('.//a')[0].get('href')
@@ -173,7 +170,10 @@ def NewsMenu(title1, title2, url, sort_type=None, page=1, categories=[]):
 	        duration = int(runtime[0])*1000
 	except:
 	    duration = None
-	summary = clip.xpath('.//span[@class="desc"]')[0].text
+	try:
+	    summary = clip.xpath('.//span[@class="desc"]')[0].text
+	except:
+	    summary = ''
 	oc.add(VideoClipObject(url=clip_url, title=title, summary=summary, duration=duration, originally_available_at=date,
 	    thumb=Resource.ContentsOfURLWithFallback(url=thumb, fallback=ICON)))
     
@@ -203,7 +203,6 @@ def VideoMenu(id, title1=None, title2=None):
 	summary = item['description']
 	duration = int(item['length'])
 	date = int(item['airdate'])/1000
-	Log(date)
 	date = Datetime.FromTimestamp(date).date()
 	thumbs = sorted(item['assets'], key = lambda thumb: int(thumb["height"]), reverse=True)
 	id = item['ID']
