@@ -8,26 +8,17 @@
 	<array>
 		<string>AAC</string>
 	</array>
-	<key>PlexClientCapabilities</key>
-	<dict>
-		<key>protocols</key>
-		<array>
-			<string>webkit</string>
-		</array>
-	</dict>
 	<key>PlexClientPlatforms</key>
 	<string>*</string>
 	<key>PlexFrameworkVersion</key>
 	<string>2</string>
-	<key>PlexMediaContainer</key>
-	<array>
-		<string>Flash</string>
-		<string>M4V</string>
-		<string>MP4</string>
-	</array>
 	<key>PlexVideoCodec</key>
 	<array>
 		<string>H.264</string>
+	</array>
+	<key>PlexFrameworkFlags</key>
+	<array>
+		<string>UseRealRTMP</string>
 	</array>
 </dict>
 </plist>
