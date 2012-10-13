@@ -167,6 +167,7 @@ def VideoMenu(id, title1=None, title2=None):
     if title2:
         oc.title2=title2
     data = JSON.ObjectFromURL(VIDEOS_LIST % id)
+    titles = {}
     for item in data['items']:
         title = item['title']
         summary = item['description']
@@ -174,11 +175,24 @@ def VideoMenu(id, title1=None, title2=None):
         date = int(item['airdate'])/1000
         date = Datetime.FromTimestamp(date).date()
         thumbs = sorted(item['assets'], key = lambda thumb: int(thumb["height"]), reverse=True)
-        id = item['ID']
-        oc.add(VideoClipObject(url=PLAYER_URL % id, title=title, summary=summary, originally_available_at=date,
-            thumb=Resource.ContentsOfURLWithFallback(url=[thumb['URL'] for thumb in thumbs], fallback=ICON)))
-    
+        id = str(item['ID'])
+        if title in titles:
+            titles[title]['ids'].append(id)
+            titles[title]['ids'].sort
+            continue
+        else:
+            titles[title] = {"title":title, "summary":summary, "duration":duration, "date":date, "thumbs":thumbs, "ids":[id]}   
+
+    for title in titles:
+        Log(titles[title])
+        video = titles[title]
+        oc.add(VideoClipObject(url=PLAYER_URL % (video['ids'][-1]), title=video['title'], summary=video['summary'], originally_available_at=video['date'],
+            thumb=Resource.ContentsOfURLWithFallback(url=[thumb['URL'] for thumb in video['thumbs']], fallback=ICON)))
+
+
+
     if len(oc) == 0:
         return ObjectContainer(header=L("Empty"), message=L('No content found.'))
     else:
+        oc.objects.sort(key = lambda obj: obj.originally_available_at, reverse=True)
         return oc
