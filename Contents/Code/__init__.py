@@ -184,9 +184,8 @@ def VideoMenu(id, title1=None, title2=None):
             titles[title] = {"title":title, "summary":summary, "duration":duration, "date":date, "thumbs":thumbs, "ids":[id]}   
 
     for title in titles:
-        Log(titles[title])
         video = titles[title]
-        oc.add(VideoClipObject(url=PLAYER_URL % (video['ids'][-1]), title=video['title'], summary=video['summary'], originally_available_at=video['date'],
+        oc.add(VideoClipObject(url=PLAYER_URL % ('Shows/ID/'+ video['ids'][-1]), title=video['title'], summary=video['summary'], originally_available_at=video['date'],
             thumb=Resource.ContentsOfURLWithFallback(url=[thumb['URL'] for thumb in video['thumbs']], fallback=ICON)))
 
 
