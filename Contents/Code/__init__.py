@@ -15,7 +15,7 @@ MORE_SHOWS = '1329813962'
 SHOWS_LIST = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getCategoryList?PID=_DyE_l_gC9yXF9BvDQ4XNfcCVLS4PQij&field=ID&field=title&field=parentID&field=description&customField=MaxClips&customField=ClipType&query=ParentIDs|%s'
 VIDEOS_LIST = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getReleaseList?PID=_DyE_l_gC9yXF9BvDQ4XNfcCVLS4PQij&query=CategoryIDs|%s&sortDescending=true&endIndex=500'
 BASE_URL = 'http://www.cbc.ca'
-PLAYER_URL = BASE_URL + '/player/%s/' 
+PLAYER_URL = BASE_URL + '/player/ID/%s/' 
 
 CATEGORIES = ['News', 'Sports', 'Digital Archives']
 
