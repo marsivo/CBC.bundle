@@ -15,7 +15,7 @@ MORE_SHOWS = '1329813962'
 SHOWS_LIST = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getCategoryList?PID=_DyE_l_gC9yXF9BvDQ4XNfcCVLS4PQij&field=ID&field=title&field=parentID&field=description&customField=MaxClips&customField=ClipType&query=ParentIDs|%s'
 VIDEOS_LIST = 'http://cbc.feeds.theplatform.com/ps/JSON/PortalService/2.2/getReleaseList?PID=_DyE_l_gC9yXF9BvDQ4XNfcCVLS4PQij&query=CategoryIDs|%s&sortDescending=true&endIndex=500'
 BASE_URL = 'http://www.cbc.ca'
-PLAYER_URL = BASE_URL + '/player/ID/%s/' 
+PLAYER_URL = BASE_URL + '/player/%s/' 
 
 CATEGORIES = ['News', 'Sports', 'Digital Archives']
 
@@ -184,9 +184,8 @@ def VideoMenu(id, title1=None, title2=None):
             titles[title] = {"title":title, "summary":summary, "duration":duration, "date":date, "thumbs":thumbs, "ids":[id]}   
 
     for title in titles:
-        Log(titles[title])
         video = titles[title]
-        oc.add(VideoClipObject(url=PLAYER_URL % (video['ids'][-1]), title=video['title'], summary=video['summary'], originally_available_at=video['date'],
+        oc.add(VideoClipObject(url=PLAYER_URL % ('Shows/ID/'+ video['ids'][-1]), title=video['title'], summary=video['summary'], originally_available_at=video['date'],
             thumb=Resource.ContentsOfURLWithFallback(url=[thumb['URL'] for thumb in video['thumbs']], fallback=ICON)))
 
 
