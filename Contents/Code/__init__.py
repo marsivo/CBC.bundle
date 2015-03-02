@@ -23,6 +23,8 @@ def Start():
     ObjectContainer.title1 = 'CBC'
     DirectoryObject.thumb = R(ICON)
 
+    HTTP.CacheTime = CACHE_1HOUR
+
 ####################################################################################################
 @handler('/video/cbc', 'CBC', art=ART, thumb=ICON)
 def MainMenu():
@@ -39,7 +41,10 @@ def MainMenu():
         ))
 
     oc.add(SearchDirectoryObject(
-        identifier='com.plexapp.plugins.cbcnewsnetwork', title='Search', summary='Search CBC videos', prompt='Search for...'
+        identifier = 'com.plexapp.plugins.cbcnewsnetwork',
+        title = 'Search',
+        summary = 'Search CBC videos',
+        prompt = 'Search for...'
     ))
 
     return oc
@@ -55,7 +60,7 @@ def ShowCategories():
     for category in categories:
 
         title = category.text
-        cat_id = category.xpath('parent::li')[0].get('data-id')
+        cat_id = category.xpath('./parent::li/@data-id')[0]
 
         oc.add(DirectoryObject(
             key = Callback(ShowsMenu, id=cat_id, title2=title),
@@ -65,22 +70,21 @@ def ShowCategories():
     return oc
 
 ####################################################################################################
-def ShowsMenu(id, title1=None, title2=None):
+@route('/video/cbc/show')
+def ShowsMenu(id, title1='', title2=''):
 
     oc = ObjectContainer()
 
-    if title1:
-        oc.title1=title1
+    if title1 != '':
+        oc.title1 = title1
 
-    if title2:
-        oc.title2=title2
+    if title2 != '':
+        oc.title2 = title2
 
     data = JSON.ObjectFromURL(SHOWS_LIST % id)
 
-    if data['listInfo']['itemCount'] == 0:
+    if data['listInfo']['itemCount'] < 1:
         return VideoMenu(id, title1, title2)
-    else:
-        pass
 
     for item in data['items']:
 
@@ -95,6 +99,7 @@ def ShowsMenu(id, title1=None, title2=None):
     oc.objects.sort(key = lambda obj: obj.title)
 
     if title2 == 'Shows':
+
         oc.add(DirectoryObject(
             key = Callback(ShowsMenu, id=MORE_SHOWS, title2='More Shows'),
             title = 'More Shows'
@@ -103,6 +108,7 @@ def ShowsMenu(id, title1=None, title2=None):
     return oc
 
 ####################################################################################################
+@route('/video/cbc/news/category')
 def NewsCategories(category):
 
     oc = ObjectContainer(title2=category)
@@ -127,6 +133,7 @@ def NewsCategories(category):
         return oc
 
 ####################################################################################################
+@route('/video/cbc/news/sort')
 def NewsSortMenu(title1, title2, url):
 
     oc = ObjectContainer(title1=title1, title2=title2)
@@ -141,12 +148,13 @@ def NewsSortMenu(title1, title2, url):
     return oc
 
 ####################################################################################################
-def NewsMenu(title1, title2, url, sort_type=None, page=1, categories=[]):
+@route('/video/cbc/news', page=int, categories=list)
+def NewsMenu(title1, title2, url, sort_type='', page=1, categories=[]):
 
     oc = ObjectContainer(title1=title1, title2=title2)
     data_url = BASE_URL + url + '?page=' + str(page)
 
-    if sort_type:
+    if sort_type != '':
         data_url = data_url + '&sort=' + sort_type
 
     data = HTML.ElementFromURL(data_url)
@@ -162,12 +170,11 @@ def NewsMenu(title1, title2, url, sort_type=None, page=1, categories=[]):
             name = subcategory.text
 
             if name not in categories:
+
                 oc.add(DirectoryObject(
                     key = Callback(NewsMenu, title1=title2, title2=name, url=url, sort_type=sort_type, page=page, categories=new_categories),
                     title = name
                 ))
-            else:
-                pass
 
     if title2 == 'Local News':
         return oc
@@ -201,9 +208,14 @@ def NewsMenu(title1, title2, url, sort_type=None, page=1, categories=[]):
             summary = None
 
         oc.add(VideoClipObject(
-            url=clip_url, title=title, summary=summary, duration=duration, originally_available_at=date,
-            thumb=Resource.ContentsOfURLWithFallback(url=thumb, fallback=ICON)))
-    
+            url = clip_url,
+            title = title,
+            summary = summary,
+            duration = duration,
+            originally_available_at = date,
+            thumb = Resource.ContentsOfURLWithFallback(url=thumb, fallback=ICON)
+        ))
+
     try:
         total_pages = int(data.xpath('//span[@class="totalpages"]/text()')[0])
     except:
@@ -223,15 +235,16 @@ def NewsMenu(title1, title2, url, sort_type=None, page=1, categories=[]):
         return oc
 
 ####################################################################################################
-def VideoMenu(id, title1=None, title2=None):
+@route('/video/cbc/video')
+def VideoMenu(id, title1='', title2=''):
 
     oc = ObjectContainer()
 
-    if title1:
-        oc.title1=title1
+    if title1 != '':
+        oc.title1 = title1
 
-    if title2:
-        oc.title2=title2
+    if title2 != '':
+        oc.title2 = title2
 
     data = JSON.ObjectFromURL(VIDEOS_LIST % id)
     titles = {}
@@ -249,9 +262,16 @@ def VideoMenu(id, title1=None, title2=None):
         if title in titles:
             titles[title]['ids'].append(id)
             titles[title]['ids'].sort
-            continue
+
         else:
-            titles[title] = {'title':title, 'summary':summary, 'duration':duration, 'date':date, 'thumbs':thumbs, 'ids':[id]}
+            titles[title] = {
+                'title': title,
+                'summary': summary,
+                'duration': duration,
+                'date': date,
+                'thumbs': thumbs,
+                'ids': [id]
+            }
 
     for title in titles:
 
